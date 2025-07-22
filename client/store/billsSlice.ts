@@ -20,7 +20,7 @@ const billsSlice = createSlice({
             state.allBills[id] = payload;
 
         },
-        removeBill: (state, action: { payload: { id: string } }) => {
+        removeBill: (state, action) => {
             delete state.allBills[action.payload.id];
         },
     },

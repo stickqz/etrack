@@ -10,7 +10,7 @@ const BillBlock = (props:any) => {
     const bill: Bill = props.bill;
 
     return (
-        <View className='flex-row  items-center justify-between p-5 bg-[#1B5C58] rounded-2xl m-5' >
+        <View className='flex-row  items-center justify-between p-5 bg-[#1B5C58] rounded-2xl mx-5 my-1' >
             <Link href={{ pathname: './[rid]/[bid]', params: { rid, bid: bill.id } }} className='flex-1'>
                 <View className='flex justify-between'>
                     <Text className='text-xl font-bold text-white'>{bill.name}</Text>
@@ -18,9 +18,6 @@ const BillBlock = (props:any) => {
                 </View>
             </Link>
             <View className='flex-row items-center justify-between gap-8'>
-
-            <MaterialIcons name="edit" size={24} color="white" />
-            <MaterialIcons name="delete" size={24} color="white" />
             </View>
         </View>
     )

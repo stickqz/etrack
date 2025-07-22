@@ -38,7 +38,7 @@ export const getBills = async (bids: string[]): Promise<Bills> => {
 
 
 export const getBill = (bid: string): Bill => {
-    return bills[bid];
+    return {...bills[bid]};
 }
 
 
@@ -63,4 +63,11 @@ export const uploadBill = (bill: any): Bill => {
     bills[newBill.id] = newBill;
 
     return newBill;
+}
+
+
+export const deleteUserBill = (bid: string): void => {
+    if (bills[bid]) {
+        delete bills[bid];
+    }
 }

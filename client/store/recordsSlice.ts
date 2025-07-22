@@ -23,17 +23,23 @@ const recordsSlice = createSlice({
             const { id } = action.payload;
             delete state.records[id];
         },
-        _addBillToRecord: (state, action) => {
-            const { payload } = action;
+        updateRecord: (state, action) => {
+            const { payload, type } = action;
             const record = state.records[payload.rid];
-            if (record) {
+            if (!record) return;
+
+            if (type === "addBill") {
                 record.bids.push(payload.id);
                 record.netExpense += payload.amount;
+                record.lastEdited = payload.editedAt;
+            } else if (type === "removeBill") {
+                record.bids = record.bids.filter(bid => bid !== payload.id);
+                record.netExpense -= payload.amount;
                 record.lastEdited = payload.editedAt;
             }
         }
     },
 });
 
-export const { loadRecord, addRecord, removeRecord, _addBillToRecord } = recordsSlice.actions;
+export const { loadRecord, addRecord, removeRecord, updateRecord } = recordsSlice.actions;
 export default recordsSlice.reducer;

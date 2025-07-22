@@ -1,14 +1,16 @@
 import { getValues, setValues } from '@/services/Utils';
 import { initUser } from '@/services/User';
-import { initBills, uploadBill } from '@/services/Bills';
+import { deleteUserBill, getBill, initBills, uploadBill } from '@/services/Bills';
 import { initRecords, uploadRecord } from '@/services/Records';
 
 
-import { loadBill, addBill } from './billsSlice';
-import { loadUser, _addRecordToUser } from './userSlice';
-import { loadRecord, _addBillToRecord, addRecord } from './recordsSlice';
+import { loadBill, addBill, removeBill } from './billsSlice';
+import { loadUser, updateUser } from './userSlice';
+import { loadRecord, addRecord, updateRecord } from './recordsSlice';
 import { Bill } from '../types/dataTypes';
 
+
+// --------------------------------------- Users --------------------------------------- //
 
 export const fetchUser = () => async (dispatch: any) => {
     const user = await initUser();
@@ -24,20 +26,19 @@ export const fetchUser = () => async (dispatch: any) => {
 export const addRecordToUser = (record: any) => async (dispatch: any, getState: any) => {
     let u = await getValues("user");
 
-    // Prevent duplicate record IDs in persistent storage
     if (!u.rids.includes(record.id)) {
         u.rids.push(record.id);
         await setValues("user", u);
     }
 
-    // Prevent duplicate record IDs in Redux state
     const { rids } = getState().user;
     if (!rids.includes(record.id)) {
-        dispatch(_addRecordToUser(record));
+        dispatch(updateUser({payload: record.id, type: "addRecord"}));
     }
 }
 
 
+// --------------------------------------- Records --------------------------------------- //
 
 export const fetchRecords = (rids: string[]) => async (dispatch: any) => {
     const records = await initRecords(rids);
@@ -48,7 +49,7 @@ export const fetchRecords = (rids: string[]) => async (dispatch: any) => {
     if (bids.length){
         dispatch(fetchBills(bids));
     }
-};
+}
 
 
 export const addBillToRecord = (bill: Bill) => async (dispatch: any) => {
@@ -61,7 +62,7 @@ export const addBillToRecord = (bill: Bill) => async (dispatch: any) => {
 
         await setValues("records", recs);
 
-        dispatch(_addBillToRecord(bill)); // Update record in state
+        dispatch(updateRecord({payload: bill, type: "addBill"}));
     } catch (error) {
         console.error('Error in addBillToRecord:', error);
     }
@@ -78,14 +79,16 @@ export const createRecord = (record: any) => async (dispatch: any) => {
 
     await setValues("records", _recs);
 
-    dispatch(addRecord(r)); // Add to records
+    dispatch(addRecord(r));
     dispatch(addRecordToUser(r));
-};
+}
 
+
+// --------------------------------------- Bills --------------------------------------- //
 
 export const fetchBills = (bids: string[]) => async (dispatch: any) => {
     const bills = await initBills(bids);
-    dispatch(loadBill(bills)); // Load bills into state
+    dispatch(loadBill(bills));
 }
 
 
@@ -98,6 +101,34 @@ export const createBill = (bill : any) => async (dispatch: any) => {
 
     await setValues("bills", allBills);
 
-    dispatch(addBill(newBill)); // Add to bills
-    dispatch(addBillToRecord(newBill)); // Link to record
-};
+    dispatch(addBill(newBill));
+    dispatch(addBillToRecord(newBill));
+}
+
+
+export const deleteBill = (bid: string) => async (dispatch: any, getState: any) => {
+    const bill = getBill(bid);
+    const rid = bill.rid;
+
+    deleteUserBill(bid);
+    const allBills = await getValues("bills");
+
+    if (allBills[bid]) {
+        delete allBills[bid];
+        await setValues("bills", allBills);
+    }
+
+    const records = await getValues("records");
+    if (records[rid]) {
+        records[rid].bids = records[rid].bids.filter((b: string) => b !== bid);
+        records[rid].netExpense -= bill.amount;
+        records[rid].lastEdited = new Date().toISOString();
+
+        await setValues("records", records);
+    }
+
+    dispatch(removeBill({ id: bid }));
+    dispatch(updateRecord({payload: bill, type: "removeBill"}));
+
+
+}

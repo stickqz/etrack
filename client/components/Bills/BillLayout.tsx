@@ -1,22 +1,36 @@
-import { Text, View } from 'react-native'
+import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Bill } from '@/types/dataTypes';
 import { formatCurrency, formatDate } from '@/services/Utils';
+import CustomModal from '../CustomModal';
+import { AppDispatch } from '@/store/store';
+import { deleteBill } from '@/store/thunks';
 
 
 const BillLayout = (props: any) => {
-    const { bid } = props;
     const bills = useSelector((state: any) => state.bills.allBills);
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
 
-
+    const { bid } = props;
     const bill: Bill = bills[bid];
 
+
+    const handleDelete = () => {
+        dispatch(deleteBill(bill.id));
+        setShowModal(false);
+        router.replace(`/${bill.rid}`);
+    };
+
     return (
-        <SafeAreaView>
+        <SafeAreaView className='relative h-full'>
         <View className='scale-150 absolute h-60 w-[100%] bg-[#429690] rounded-b-[50%] '/>
             <View className="items-center flex-row mt-20 pl-5">
                 <View>
@@ -40,6 +54,25 @@ const BillLayout = (props: any) => {
                     <Text className='text-lg text-slate-500'>Shared By: {bill.sharedby.join(', ')}</Text>
                 </View>
             </View>
+            <View className='bg-primary h-20 mt-auto rounded-2xl mx-2 flex-row'>
+                <View className='flex-1 justify-center items-center'>
+                    <MaterialIcons name="edit" size={24} color="grey" />
+                    <Text className='text-white text-sm'>Edit</Text>
+                </View>
+                <Pressable className='flex-1 justify-center items-center' onPress={() => setShowModal(true)}>
+                    <MaterialIcons name="delete" size={24} color="white" />
+                    <Text className='text-white text-sm'>Delete</Text>
+                </Pressable>
+            </View>
+            <CustomModal
+                visible={showModal} // Replace with actual state to control modal visibility
+                message={'Are you sure you want to delete this bill?'}
+                onAccept={handleDelete}
+                onReject={() => setShowModal(false)}
+                acceptText='Delete'
+                rejectText='Cancel'
+                onClose={() => setShowModal(false)}
+                />
      </SafeAreaView>
     );
 }

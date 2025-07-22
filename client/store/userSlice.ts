@@ -13,10 +13,15 @@ const userSlice = createSlice({
             state.name = action.payload.name;
             state.rids = action.payload.rids;
         },
-        _addRecordToUser: (state, action) => {
-            const { payload } = action;
-            if (!state.rids.includes(payload.id)) {
-                state.rids.push(payload.id);
+        updateUser: (state, action) => {
+            const { payload, type } = action;
+
+            if (type === "addRecord") {
+                if (!state.rids.includes(payload.id)) {
+                    state.rids.push(payload.id);
+                }
+            } else if (type === "removeRecord") {
+                state.rids = state.rids.filter(rid => rid !== payload.id);
             }
         }
 
@@ -24,7 +29,7 @@ const userSlice = createSlice({
 });
 
 
-export const { loadUser, _addRecordToUser } = userSlice.actions;
+export const { loadUser, updateUser } = userSlice.actions;
 export default userSlice.reducer;
 
 
