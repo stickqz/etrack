@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
-import { Record } from '@/types/dummyDataTypes';
+import { Record } from '@/types/dataTypes';
 import { formatCurrency } from '@/services/Utils';
 
 

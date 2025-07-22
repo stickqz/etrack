@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
-import { Bill } from '@/types/dummyDataTypes';
+import { Bill } from '@/types/dataTypes';
 import { formatCurrency } from '@/services/Utils';
 
 

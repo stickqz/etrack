@@ -1,6 +1,7 @@
-import { Stack } from "expo-router"; // Import Stack for navigation
-import "./globals.css"; // Import global styles
-
+import { Stack } from "expo-router";
+import "./globals.css";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 export default function RootLayout() {
 
@@ -9,8 +10,10 @@ export default function RootLayout() {
     const isLoggedIn = true; // Replace with actual authentication logic
 
     return (
-        <Stack>
-            <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        </Stack>
+        <Provider store={store}>
+            <Stack>
+                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+            </Stack>
+        </Provider>
     );
 }

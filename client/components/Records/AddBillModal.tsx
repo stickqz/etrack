@@ -5,20 +5,24 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { formatCurrency, formatDate } from '@/services/Utils';
 import { MaterialIcons } from '@expo/vector-icons';
-import { uploadBill } from '@/services/Bills';
+import { useDispatch } from 'react-redux';
+import { createBill } from '@/store/thunks';
+import { AppDispatch } from '@/store/store';
 
 
 interface Props {
     modalButton: () => void;
+    rid: string;
 }
 
-const AddBillModal = ({ modalButton }: Props) => {
+const AddBillModal = ({ modalButton, rid }: Props) => {
 
     const [name, setName] = useState('');
     const [amount, setAmount] = useState(0.00);
     const [description, setDescription] = useState('');
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
+    const dispatch = useDispatch<AppDispatch>();
 
 
     const handleAmount = (text: string) => {
@@ -54,14 +58,12 @@ const AddBillModal = ({ modalButton }: Props) => {
             amount,
             description,
             dateTime: date.toISOString(),
+            rid
         }
-        console.log(bill);
-        // add to bills object
-        // add billid to record object
-        await uploadBill(bill);
+
+        dispatch(createBill(bill));
 
         modalButton();
-        // Add logic to handle form submission
     };
 
 

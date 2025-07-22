@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
 
@@ -32,3 +35,24 @@ export const formatCurrency = (amount: number): string => {
 
     return curr;
 };
+
+
+export const getValues = async (key: string) => {
+    try {
+
+        const value = await AsyncStorage.getItem(key);
+        return value ? JSON.parse(value) : null;
+    } catch (error) {
+        console.error(`Error getting value for key "${key}":`, error);
+        return null;
+    }
+}
+
+
+export const setValues = async (key: string, value: any) => {
+    try {
+        await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+        console.error(`Error setting value for key "${key}":`, error);
+    }
+}

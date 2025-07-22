@@ -2,8 +2,12 @@ import { View, Text, Pressable, Image, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { icons } from '@/constants/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LandingPage = () => {
+
+    AsyncStorage.clear();
+
     return (
         <SafeAreaView className="flex-col items-center justify-center">
             <View className="relative w-full h-[83%]">

@@ -1,15 +1,19 @@
 import { Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+
 import { MaterialIcons } from '@expo/vector-icons';
-import { getBill } from '@/services/Bills';
-import { Bill } from '@/types/dummyDataTypes';
+
+import { Bill } from '@/types/dataTypes';
 import { formatCurrency, formatDate } from '@/services/Utils';
 
-const BillLayout = (props: any) => {
-    console.log("Bill ID", props.bid);
-    const { bid } = props;
 
-    const bill: Bill = getBill(bid)
+const BillLayout = (props: any) => {
+    const { bid } = props;
+    const bills = useSelector((state: any) => state.bills.allBills);
+
+
+    const bill: Bill = bills[bid];
 
     return (
         <SafeAreaView>

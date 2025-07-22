@@ -1,10 +1,10 @@
-import { Bill } from "@/types/dummyDataTypes";
+import { Bill } from "@/types/dataTypes";
 
 export const user = {
-    id: 1,
+    uid: "1",
     name: "John Doe",
     email: "johndoe@example.com",
-    rids: ["abc", "bcd"] // Reduced to two records
+    rids: ["abc", "bcd"]
 };
 
 export const records: any = {
@@ -14,7 +14,7 @@ export const records: any = {
         title: "Daily Expenses",
         createdAt: "2025-07-14T10:00:00Z",
         netExpense: 200000,
-        owner: "John Doe",
+        uid: "1",
         lastEdited: "2025-07-14T12:00:00Z",
         description: "Daily expenses for the team",
     },
@@ -24,7 +24,7 @@ export const records: any = {
         title: "Monthly Expenses",
         createdAt: "2025-07-01T09:00:00Z",
         netExpense: 100000,
-        owner: "John Doe",
+        uid: "1",
         lastEdited: "2025-07-01T11:00:00Z",
         description: "Monthly expenses for the office",
     }
@@ -44,6 +44,7 @@ export const bills: { [key: string]: Bill } = {
         voicenote: "",
         sharedby: ["John Doe"], // Default value
         paidBy: "John Doe",
+        rid: "abc",
     },
     "bill2": {
         id: "bill2",
@@ -58,6 +59,7 @@ export const bills: { [key: string]: Bill } = {
         voicenote: "",
         sharedby: ["John Doe"], // Default value
         paidBy: "John Doe",
+        rid: "abc",
     },
     "bill3": {
         id: "bill3",
@@ -72,6 +74,7 @@ export const bills: { [key: string]: Bill } = {
         voicenote: "",
         sharedby: ["John Doe"], // Default value
         paidBy: "John Doe",
+        rid: "bcd",
     }
 };
 

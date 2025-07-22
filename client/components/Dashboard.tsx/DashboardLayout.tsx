@@ -1,39 +1,57 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { AppDispatch } from '@/store/store';
+
 import { MaterialIcons } from '@expo/vector-icons';
 import RecordBlock from '@/components/Dashboard.tsx/RecordBlock';
-import { user } from '@/constants/dummyData';
-import { useEffect } from 'react';
-import { getRecords, initRecords, } from '@/services/Records';
-import { Records } from '@/types/dummyDataTypes';
+import AddRecordModal from '@/components/Dashboard.tsx/AddRecordModal';
+import { fetchUser } from '@/store/thunks';
+
 
 const DashboardLayout = () => {
-    const { name, rids } = user;
+    const dispatch = useDispatch<AppDispatch>();
+    const { name, rids, uid } = useSelector((state: any) => state.user);
+    const { records } = useSelector((state: any) => state.records);
+    const [showAddModal, setShowAddModal] = useState(false);
+
 
     useEffect(() => {
-        initRecords(rids);
-    }, [rids]);
+            dispatch(fetchUser());
+    }, [dispatch]);
 
-    const records: Records = getRecords(rids);
+
+    const handleAddButton = () => {
+        setShowAddModal((prev) => !prev);
+    }
 
     return (
-        <SafeAreaView className=''>
+        <SafeAreaView className='relative h-full'>
             <View className='scale-150 absolute h-60 w-[100%] bg-[#429690] rounded-b-[50%] '/>
             <View className="items-center flex-row mt-20 pl-5">
                 <View>
                     <Text className="text-sm text-white">Good Morning,</Text>
-                    <Text className="text-2xl font-bold text-white">{name}</Text>
+                    <Text className="text-2xl font-bold text-white">{name || ""}</Text>
                 </View>
-                <View className='ml-auto mr-5'>
+                <Pressable className='ml-auto mr-5' onPress={handleAddButton}>
                     <MaterialIcons name="add-box" size={42} color="white" />
-                </View>
+                </Pressable>
             </View>
 
-            <ScrollView className='mt-10'>
-                {rids.map((rid) => (
+            { records && Object.keys(records).length !== 0 && rids?.length &&
+             <ScrollView className='mt-10'>
+                {rids.map((rid: string) => (
                     <RecordBlock key={rid} record={records[rid]} />
                 ))}
             </ScrollView>
+            }
+
+            { showAddModal &&
+                <AddRecordModal uid={uid} modalButton={handleAddButton} />
+            }
+
         </SafeAreaView>
     )
 }

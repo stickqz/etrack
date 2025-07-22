@@ -1,4 +1,3 @@
-import { Bill } from "@/types/dummyDataTypes";
 
 export const user = {
     id: 1,
@@ -46,7 +45,7 @@ export const records: any = {
     }
 };
 
-export const bills: { [key: string]: Bill } = {
+export const bills: { [key: string]: any } = {
     "bill1": {
         id: "bill1",
         name: "Reliance Shopping",
