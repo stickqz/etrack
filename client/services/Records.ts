@@ -38,7 +38,7 @@ export const getRecords = async (rids: string[]): Promise<Records> => {
 
 
 export const getRecord = (rid: string): Record => {
-    return records[rid];
+    return { ...records[rid] };
 }
 
 
@@ -55,4 +55,11 @@ export const uploadRecord = (record: any): Record => {
     };
 
     return newRecord;
+}
+
+
+export const deleteUserRecord = (rid: string) => {
+    if (records[rid]) {
+        delete records[rid];
+    }
 }

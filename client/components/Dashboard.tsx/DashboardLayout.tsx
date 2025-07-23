@@ -17,7 +17,6 @@ const DashboardLayout = () => {
     const { records } = useSelector((state: any) => state.records);
     const [showAddModal, setShowAddModal] = useState(false);
 
-
     useEffect(() => {
             dispatch(fetchUser());
     }, [dispatch]);

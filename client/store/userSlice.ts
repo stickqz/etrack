@@ -14,14 +14,14 @@ const userSlice = createSlice({
             state.rids = action.payload.rids;
         },
         updateUser: (state, action) => {
-            const { payload, type } = action;
+            const { id, type } = action.payload;
 
             if (type === "addRecord") {
-                if (!state.rids.includes(payload.id)) {
-                    state.rids.push(payload.id);
-                }
+                if (!state.rids.includes(id))
+                    state.rids.push(id);
+
             } else if (type === "removeRecord") {
-                state.rids = state.rids.filter(rid => rid !== payload.id);
+                state.rids = state.rids.filter(rid => rid !== id);
             }
         }
 

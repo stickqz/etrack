@@ -8,14 +8,9 @@ let user = {} as User;
 
 export const initUser = async (): Promise<User> => {
     const userData = await getValues("user");
+    user = userData || dummyUser;
 
-    if (userData) {
-        user = JSON.parse(userData);
-    } else {
-        user = dummyUser;
-
-        await setValues("user", user);
-    }
+    await setValues("user", user);
 
     return user;
 };

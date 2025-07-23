@@ -19,9 +19,9 @@ const recordsSlice = createSlice({
             const newRecord = action.payload;
             state.records[newRecord.id] = newRecord;
         },
-        removeRecord: (state, action: { payload: { id: string } }) => {
-            const { id } = action.payload;
-            delete state.records[id];
+        removeRecord: (state, action) => {
+            const { payload } = action;
+            delete state.records[payload];
         },
         updateRecord: (state, action) => {
             const { payload, type } = action;

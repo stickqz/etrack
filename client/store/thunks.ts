@@ -1,12 +1,12 @@
 import { getValues, setValues } from '@/services/Utils';
 import { initUser } from '@/services/User';
 import { deleteUserBill, getBill, initBills, uploadBill } from '@/services/Bills';
-import { initRecords, uploadRecord } from '@/services/Records';
+import { deleteUserRecord, getRecord, initRecords, uploadRecord } from '@/services/Records';
 
 
 import { loadBill, addBill, removeBill } from './billsSlice';
 import { loadUser, updateUser } from './userSlice';
-import { loadRecord, addRecord, updateRecord } from './recordsSlice';
+import { loadRecord, addRecord, updateRecord, removeRecord } from './recordsSlice';
 import { Bill } from '../types/dataTypes';
 
 
@@ -32,9 +32,8 @@ export const addRecordToUser = (record: any) => async (dispatch: any, getState: 
     }
 
     const { rids } = getState().user;
-    if (!rids.includes(record.id)) {
-        dispatch(updateUser({payload: record.id, type: "addRecord"}));
-    }
+    if (!rids.includes(record.id))
+        dispatch(updateUser({id: record.id, type: "addRecord"}));
 }
 
 
@@ -46,9 +45,8 @@ export const fetchRecords = (rids: string[]) => async (dispatch: any) => {
 
     const bids = Object.values(records).flatMap(record => record.bids);
 
-    if (bids.length){
+    if (bids.length)
         dispatch(fetchBills(bids));
-    }
 }
 
 
@@ -84,6 +82,31 @@ export const createRecord = (record: any) => async (dispatch: any) => {
 }
 
 
+export const deleteRecord = (rid: string) => async (dispatch: any) => {
+    const record = getRecord(rid);
+    const bids = record.bids;
+
+    for (const id of bids)
+        deleteBill(id);
+
+    deleteUserRecord(rid);
+    const recs = await getValues("records");
+
+    if (recs[rid]) {
+        delete recs[rid];
+        await setValues("records", recs);
+    }
+
+    const user = await getValues("user");
+    if (user.rids.includes(rid)) {
+        user.rids = user.rids.filter((r: string) => r !== rid);
+        await setValues("user", user);
+    }
+
+    dispatch(removeRecord(rid));
+    dispatch(updateUser({id: rid, type: "removeRecord"}));
+}
+
 // --------------------------------------- Bills --------------------------------------- //
 
 export const fetchBills = (bids: string[]) => async (dispatch: any) => {
@@ -106,7 +129,7 @@ export const createBill = (bill : any) => async (dispatch: any) => {
 }
 
 
-export const deleteBill = (bid: string) => async (dispatch: any, getState: any) => {
+export const deleteBill = (bid: string) => async (dispatch: any) => {
     const bill = getBill(bid);
     const rid = bill.rid;
 

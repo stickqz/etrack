@@ -1,39 +1,56 @@
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { Entypo, MaterialIcons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
 import { formatCurrency, formatDate } from '@/services/Utils';
 
 import BillBlock from './BillBlock';
 import AddBillModal from './AddBillModal';
-
+import { ThreeDotMenu } from './Menu'; // Assuming this is the correct path for the ThreeDotMenu component
+import { deleteRecord } from '@/store/thunks';
 
 const RecordLayout = (props: any) => {
     const rid = props.rid;
+    const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
     const record = useSelector((state: RootState) => state.records.records[rid]);
     const { allBills: bills } = useSelector((state: any) => state.bills);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showOpts, setShowOpts] = useState(false);
 
 
     const handleAddButton = () => {
         setShowAddModal((prev) => !prev);
     }
 
+
+    const handleOptsButton = () => {
+        setShowOpts((prev) => !prev);
+    }
+
+    const onPressDelete = () => {
+        dispatch(deleteRecord(rid));
+        setShowOpts(false);
+        router.replace('/dashboard');
+    }
+
     return (
         <SafeAreaView className='relative h-full'>
             <View className='absolute scale-150 h-60 w-[100%] bg-[#429690] rounded-b-[50%] ' />
-            <View className="items-center flex-row mt-20 pl-5">
+            <View className="items-center justify-between flex-row mt-20 px-5">
                 <View>
                     <Text className="text-2xl font-bold text-white">{record.title}</Text>
                     <Text className="text-sm text-white">Expenditure: ₹ {formatCurrency(record.netExpense)}</Text>
                 </View>
-                <View className='ml-auto mr-5 mb-1 items-center'>
-                    <MaterialIcons name="people" size={42} color="white" />
-                    <Text className="text-xs text-white">Access</Text>
-                </View>
+
+                <Pressable onPress={handleOptsButton} className='p-1'>
+                    <Entypo name="dots-three-vertical" size={28} color="white" />
+                </Pressable>
             </View>
+
             <View className='pl-5 pt-3'>
                 <Text className='text-sm text-white'>Last Modified: {formatDate(record.lastEdited)}</Text>
             </View>
@@ -59,6 +76,22 @@ const RecordLayout = (props: any) => {
             {showAddModal &&
                 <AddBillModal rid={rid} modalButton={handleAddButton} />
             }
+
+            {showOpts && (
+                <ThreeDotMenu
+                    options={[{
+                        label: 'Edit Record',
+                        onPress: () => {
+                            setShowOpts(false);
+                        }
+                    },
+                    {
+                        label: 'Delete Record',
+                        onPress: onPressDelete
+                    }]}
+                    toggleMenu={handleOptsButton}
+                />
+            )}
         </SafeAreaView>
     )
 }
