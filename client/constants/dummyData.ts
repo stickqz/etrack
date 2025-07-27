@@ -35,7 +35,7 @@ export const bills: { [key: string]: Bill } = {
         id: "bill1",
         name: "Reliance Shopping",
         amount: 50000,
-        date: "2025-07-14T10:00:00Z",
+        createdAt: "2025-07-14T10:00:00Z",
         addedby: "John Doe",
         editedby: "John Doe", // Default value
         editedAt: "2025-07-14T11:00:00Z",
@@ -50,7 +50,7 @@ export const bills: { [key: string]: Bill } = {
         id: "bill2",
         name: "Electricity Bill",
         amount: 150000,
-        date: "2025-07-14T10:00:00Z",
+        createdAt: "2025-07-14T10:00:00Z",
         addedby: "John Doe",
         editedby: "John Doe", // Default value
         editedAt: "2025-07-14T11:30:00Z",
@@ -65,7 +65,7 @@ export const bills: { [key: string]: Bill } = {
         id: "bill3",
         name: "Internet Bill",
         amount: 100000,
-        date: "2025-07-01T09:00:00Z",
+        createdAt: "2025-07-01T09:00:00Z",
         addedby: "John Doe",
         editedby: "John Doe", // Default value
         editedAt: "2025-07-01T10:00:00Z",

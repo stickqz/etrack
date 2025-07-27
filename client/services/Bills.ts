@@ -48,7 +48,7 @@ export const uploadBill = (bill: any): Bill => {
         id: getRandomHex(6),
         name: bill.name,
         amount: bill.amount,
-        date: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
         addedby: "John Doe",
         editedby: "John Doe",
         editedAt: new Date().toISOString(),

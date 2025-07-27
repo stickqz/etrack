@@ -24,7 +24,7 @@ export interface Bill {
     id: string;
     name: string;
     amount: number;
-    date: string;
+    createdAt: string;
     addedby: string;
     editedby: string;
     editedAt: string;

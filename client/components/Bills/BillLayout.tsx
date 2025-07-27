@@ -45,7 +45,7 @@ const BillLayout = (props: any) => {
             </View>
             <View className='mt-6 p-5 bg-[#f2f2f2] rounded-t-[30px]'>
                 <View className='p-5'>
-                    <Text className='text-lg text-slate-500'>Date: {formatDate(bill.date)}</Text>
+                    <Text className='text-lg text-slate-500'>Date: {formatDate(bill.createdAt)}</Text>
                     <Text className='text-lg text-slate-500'>Added By: {bill.addedby}</Text>
                     <Text className='text-lg text-slate-500'>Edited By: {bill.editedby}</Text>
                     <Text className='text-lg text-slate-500'>Edited At: {formatDate(bill.editedAt)}</Text>
