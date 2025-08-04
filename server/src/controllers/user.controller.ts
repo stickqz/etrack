@@ -8,9 +8,16 @@ const prisma = new PrismaClient();
 export const getUser = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
         where: { id: req.params.id },
-        include: { records: true },
+        include: {
+            records: {
+                include: { bills: true }
+            }
+        },
     });
-    if (!user) return res.status(404).json({ error: "user not found" });
+
+    if (!user)
+        return res.status(404).json({ error: "user not found" });
+
     res.json(user);
 };
 
@@ -22,7 +29,6 @@ export const createUser = async (req: Request, res: Response) => {
         data: { name, email },
     });
 
-    console.log('User created:', user);
 
     res.status(201).json(user);
 }

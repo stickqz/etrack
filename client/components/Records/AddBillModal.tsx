@@ -60,7 +60,6 @@ const AddBillModal = ({ modalButton, rid }: Props) => {
             dateTime: date.toISOString(),
             rid
         }
-
         dispatch(createBill(bill));
 
         modalButton();

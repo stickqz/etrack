@@ -26,7 +26,7 @@ const BillLayout = (props: any) => {
     const handleDelete = () => {
         dispatch(deleteBill(bill.id));
         setShowModal(false);
-        router.replace(`/${bill.rid}`);
+        router.replace(`/${bill.recordId}`);
     };
 
     return (
@@ -46,12 +46,7 @@ const BillLayout = (props: any) => {
             <View className='mt-6 p-5 bg-[#f2f2f2] rounded-t-[30px]'>
                 <View className='p-5'>
                     <Text className='text-lg text-slate-500'>Date: {formatDate(bill.createdAt)}</Text>
-                    <Text className='text-lg text-slate-500'>Added By: {bill.addedby}</Text>
-                    <Text className='text-lg text-slate-500'>Edited By: {bill.editedby}</Text>
-                    <Text className='text-lg text-slate-500'>Edited At: {formatDate(bill.editedAt)}</Text>
                     <Text className='text-lg text-slate-500'>Description: {bill.description}</Text>
-                    <Text className='text-lg text-slate-500'>Paid By: {bill.paidBy}</Text>
-                    <Text className='text-lg text-slate-500'>Shared By: {bill.sharedby.join(', ')}</Text>
                 </View>
             </View>
             <View className='bg-primary h-20 mt-auto rounded-2xl mx-2 flex-row'>
@@ -65,7 +60,7 @@ const BillLayout = (props: any) => {
                 </Pressable>
             </View>
             <CustomModal
-                visible={showModal} // Replace with actual state to control modal visibility
+                visible={showModal}
                 message={'Are you sure you want to delete this bill?'}
                 onAccept={handleDelete}
                 onReject={() => setShowModal(false)}

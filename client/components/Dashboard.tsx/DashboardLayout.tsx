@@ -13,14 +13,13 @@ import { fetchUser } from '@/store/thunks';
 
 const DashboardLayout = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { name, rids, uid } = useSelector((state: any) => state.user);
+    const { name, rids, id } = useSelector((state: any) => state.user);
     const { records } = useSelector((state: any) => state.records);
     const [showAddModal, setShowAddModal] = useState(false);
 
     useEffect(() => {
             dispatch(fetchUser());
     }, [dispatch]);
-
 
     const handleAddButton = () => {
         setShowAddModal((prev) => !prev);
@@ -41,14 +40,14 @@ const DashboardLayout = () => {
 
             { records && Object.keys(records).length !== 0 && rids?.length &&
              <ScrollView className='mt-10'>
-                {rids.map((rid: string) => (
-                    <RecordBlock key={rid} record={records[rid]} />
+                {rids.map((recordId: string) => (
+                    <RecordBlock key={recordId} record={records[recordId]} />
                 ))}
             </ScrollView>
             }
 
             { showAddModal &&
-                <AddRecordModal uid={uid} modalButton={handleAddButton} />
+                <AddRecordModal uid={id} modalButton={handleAddButton} />
             }
 
         </SafeAreaView>

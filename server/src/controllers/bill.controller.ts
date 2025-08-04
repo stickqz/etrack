@@ -26,9 +26,22 @@ export const getBillById = async (req: Request, res: Response) => {
 
 export const createBill = async (req: Request, res: Response) => {
     const { name, amount, description, date, recordId } = req.body;
+
     const bill = await prisma.bill.create({
         data: { name, amount, description, recordId },
     });
+
+
+    await prisma.record.update({
+        where: { id: recordId },
+        data: {
+            netAmount: {
+                increment: amount,
+            },
+            lastEdited: date
+        },
+    });
+
     res.status(201).json(bill);
 };
 

@@ -6,3 +6,5 @@ alias etstop='cetrack; docker-compose -f docker-compose-dev.yml stop'
 alias etreboot='cetrack; etstop; etrebuild; etstart'
 
 alias dock_api='docker exec -it etrack-server-1 sh'
+
+alias start_app='cetrack; cd client; npm run android'

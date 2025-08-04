@@ -1,65 +1,99 @@
 import { Record, Records } from "@/types/dataTypes";
-import { records as dummyRecords } from "@/constants/dummyData";
-import { getRandomHex, getValues, setValues } from "@/services/Utils";
+import { getValues} from "@/services/Utils";
+import api from "./APIclient";
 
 let records: Records = {};
 
 // Fetch bills for this user
-export const initRecords = async (rids: string[]): Promise<Records> => {
-    // get bills from API
+export const initRecords = async (recordIds: any): Promise<Records> => {
+    // // get bills from API
 
-    const allRecords = await getValues("records");
+    // const allRecords = await getValues("records");
 
-    if (allRecords) {
-        for (const rid of rids)
-            records[rid] = allRecords[rid];
-    } else {
-        for (const rid of rids)
-            records[rid] = dummyRecords[rid];
+    // if (allRecords) {
+    //     for (const recordId of recordIds)
+    //         records[recordId] = allRecords[recordId];
+    // } else {
+    //     for (const recordId of recordIds)
+    //         records[recordId] = dummyRecords[recordId];
 
-        await setValues("records", records);
-    }
-
+    //     await setValues("records", records);
+    // }
+    records = structuredClone(recordIds);
     return records;
 }
 
 
-export const getRecords = async (rids: string[]): Promise<Records> => {
+export const getRecords = async (recordIds: string[]): Promise<Records> => {
     const userRecords: Records = {};
     const allRecords = await getValues("records");
 
     if (allRecords) {
-        for (const rid of rids)
-            userRecords[rid] = allRecords[rid];
+        for (const recordId of recordIds)
+            userRecords[recordId] = allRecords[recordId];
     }
 
     return userRecords;
 }
 
 
-export const getRecord = (rid: string): Record => {
-    return { ...records[rid] };
+export const getRecord = (recordId: string): Record => {
+    return { ...records[recordId] };
 }
-
-
-export const uploadRecord = (record: any): Record => {
+/*
     const newRecord: Record = {
         id: getRandomHex(6),
         title: record.name,
         bids: [],
         createdAt: new Date().toISOString(),
-        netExpense: 0,
+        netAmount: 0,
         uid: record.uid,
         lastEdited: new Date().toISOString(),
         description: record.description,
     };
 
+*/
+export const uploadRecord = async (record: any): Promise<Record> => {
+    const robj = {
+        title: record.name,
+        userId: record.uid,
+        netAmount: 0,
+        lastEdited: new Date().toISOString(),
+        description: record.description,
+    }
+    const newRecord = await api.createRecord(robj);
+
+    if (!newRecord)
+        throw new Error("Failed to create record");
+
+    records[newRecord.id] = newRecord;
+
     return newRecord;
 }
 
 
-export const deleteUserRecord = (rid: string) => {
-    if (records[rid]) {
-        delete records[rid];
+export const deleteUserRecord = (recordId: string) => {
+    if (records[recordId]) {
+        delete records[recordId];
     }
 }
+
+
+// export const updateRecordData = (data: any) => {
+//     const { recordId, bid } = data;
+//     console.log('recordId', recordId, 'bid', bid);
+//     console.log('\n RECORDS', records);
+//     console.log(Object.keys(records), 'records keys');
+//     console.log(records[recordId], 'record data');
+    
+//     // Check if record exists
+//     if (!records[recordId]) {
+//         console.error(`Record with id ${recordId} does not exist in records.`);
+//         return records;
+//     }
+
+//     const bids = [...records[recordId].bids, bid];
+//     records[recordId].bids = bids;
+    
+//     return records;
+// }

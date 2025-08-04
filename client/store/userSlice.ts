@@ -9,7 +9,7 @@ const userSlice = createSlice({
     reducers: {
         loadUser: (state, action: { payload: User }) => {
             state.email = action.payload.email;
-            state.uid = action.payload.uid;
+            state.id = action.payload.id;
             state.name = action.payload.name;
             state.rids = action.payload.rids;
         },
@@ -23,6 +23,7 @@ const userSlice = createSlice({
             } else if (type === "removeRecord") {
                 state.rids = state.rids.filter(rid => rid !== id);
             }
+
         }
 
     },

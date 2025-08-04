@@ -1,24 +1,26 @@
 import { Bills, Bill } from "@/types/dataTypes";
-import { bills as dummyBills } from "@/constants/dummyData";
-import { getRandomHex, getValues, setValues } from "@/services/Utils";
+import { getRandomHex, getValues } from "@/services/Utils";
+import api from "./APIclient";
 
 
 let bills: Bills = {};
 
 // Fetch bills for this user
-export const initBills = async (bids: string[]) => {
+export const initBills = async (bids: any) => {
+    bills = bids;
 
-    const allBills = await getValues("bills");
 
-    if (allBills) {
-        for (const bid of bids)
-            bills[bid] = allBills[bid];
-    } else {
-        for (const bid of bids)
-            bills[bid] = dummyBills[bid];
+    // const allBills = await getValues("bills");
 
-        await setValues("bills", bills);
-    }
+    // if (allBills) {
+    //     for (const bid of bids)
+    //         bills[bid] = allBills[bid];
+    // } else {
+    //     for (const bid of bids)
+    //         bills[bid] = dummyBills[bid];
+
+    //     await setValues("bills", bills);
+    // }
 
     return bills;
 }
@@ -41,24 +43,31 @@ export const getBill = (bid: string): Bill => {
     return {...bills[bid]};
 }
 
+/*
+model Bill {
+  id          String   @id @default(uuid())
+  name        String
+  amount      Int
+  record      Record   @relation(fields: [recordId], references: [id])
+  recordId    String
+  createdAt   DateTime @default(now())
+  description String?
+}
 
-export const uploadBill = (bill: any): Bill => {
+*/
 
-    const newBill: Bill = {
+export const uploadBill = async (bill: any): Promise<Bill> => {
+
+    const billobj = {
         id: getRandomHex(6),
         name: bill.name,
         amount: bill.amount,
         createdAt: new Date().toISOString(),
-        addedby: "John Doe",
-        editedby: "John Doe",
-        editedAt: new Date().toISOString(),
+        recordId: bill.rid,
         description: bill.description,
-        billfile: "",
-        voicenote: "",
-        sharedby: ["John Doe"],
-        paidBy: "John Doe",
-        rid: bill.rid
     };
+
+    const newBill = await api.createBill(billobj);
 
     bills[newBill.id] = newBill;
 

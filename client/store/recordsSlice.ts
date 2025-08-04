@@ -17,25 +17,29 @@ const recordsSlice = createSlice({
         },
         addRecord: (state, action: { payload: any }) => {
             const newRecord = action.payload;
+
             state.records[newRecord.id] = newRecord;
+
+
         },
         removeRecord: (state, action) => {
             const { payload } = action;
             delete state.records[payload];
         },
-        updateRecord: (state, action) => {
-            const { payload, type } = action;
-            const record = state.records[payload.rid];
+        updateRecord: (state, { payload}) => {
+            const {bill, type} = payload;
+            const record = state.records[bill.recordId];
+
             if (!record) return;
 
             if (type === "addBill") {
-                record.bids.push(payload.id);
-                record.netExpense += payload.amount;
-                record.lastEdited = payload.editedAt;
+                record.bids.push(bill.id);
+                record.netAmount += bill.amount;
+                record.lastEdited = bill.createdAt;
             } else if (type === "removeBill") {
-                record.bids = record.bids.filter(bid => bid !== payload.id);
-                record.netExpense -= payload.amount;
-                record.lastEdited = payload.editedAt;
+                record.bids = record.bids.filter(bid => bid !== bill.id);
+                record.netAmount -= bill.amount;
+                record.lastEdited = bill.createdAt;
             }
         }
     },

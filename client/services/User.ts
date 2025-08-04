@@ -1,30 +1,24 @@
 import { User } from "@/types/dataTypes";
-import { user as dummyUser } from "@/constants/dummyData";
-import { getValues, setValues } from "@/services/Utils";
+import { flattenUserData } from "@/services/Utils";
+import api from "./APIclient";
 
 
 let user = {} as User;
 
 
-export const initUser = async (): Promise<User> => {
-    const userData = await getValues("user");
-    user = userData || dummyUser;
+export const initUser = async (): Promise<any> => {
+    const u = await api.getuser("e14d0853-cda6-48a4-bf64-3a35a247e341");
+    const res = flattenUserData(u);
+    user = res.user;
 
-    await setValues("user", user);
 
-    return user;
+    if (u === undefined || u === null)
+        throw new Error("User not found");
+
+    return res;
 };
 
 
 export const getUser = () => {
-    return user;
-};
-
-
-export const updateUser = async (updatedUser: Partial<User>): Promise<User> => {
-    user = { ...user, ...updatedUser };
-
-    await setValues("user", user);
-
     return user;
 };

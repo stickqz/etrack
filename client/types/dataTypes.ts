@@ -1,5 +1,5 @@
 export interface User {
-    uid: string;
+    id: string;
     name: string;
     email: string;
     rids: string[];
@@ -8,10 +8,10 @@ export interface User {
 export interface Record {
     bids: string[];
     id: string;
-    uid: string;
+    userId: string;
     title: string;
     createdAt: string;
-    netExpense: number;
+    netAmount: number;
     // owner: string;
     // editor: string;
     // payers: string[];
@@ -24,16 +24,16 @@ export interface Bill {
     id: string;
     name: string;
     amount: number;
+    recordId: string;
     createdAt: string;
-    addedby: string;
-    editedby: string;
-    editedAt: string;
     description: string;
-    billfile: string;
-    voicenote: string;
-    sharedby: string[];
-    paidBy: string;
-    rid: string;
+    // addedby: string;
+    // editedby: string;
+    // editedAt: string;
+    // billfile: string;
+    // voicenote: string;
+    // sharedby: string[];
+    // paidBy: string;
 }
 
 export interface Records {

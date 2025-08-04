@@ -13,7 +13,7 @@ const RecordBlock = (props : any) => {
             <Link href={{ pathname: '/(app)/[rid]', params: { rid: record.id}}} className='flex-1'>
                 <View className='flex justify-between'>
                     <Text className='text-xl font-bold text-white'>{record.title}</Text>
-                    <Text className='text-sm text-white mt-5'>Net Expense: ₹ {formatCurrency(record.netExpense)}</Text>
+                    <Text className='text-sm text-white mt-5'>Net Expense: ₹ {formatCurrency(record.netAmount)}</Text>
                 </View>
             </Link>
         </View>
